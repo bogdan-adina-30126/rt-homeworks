@@ -7,10 +7,10 @@ package ssatr.exemple.mqtt;
  * propriu. Înlocuiți STUDENT cu numele vostru (fără spații sau diacritice).
  */
 public class MqttConfig {
-
+    
     public static final String BROKER = "tcp://control.aut.utcluj.ro:11188";
 
-    public static final String STUDENT = "popescu-ion";
+    public static final String STUDENT = "bogdan-adina";
 
     public static final String TOPIC = "ssatr/" + STUDENT + "/exemplu/salut";
 }
