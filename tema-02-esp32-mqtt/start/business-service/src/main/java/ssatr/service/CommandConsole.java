@@ -44,11 +44,24 @@ public class CommandConsole implements Runnable {
     }
 
     private void sendCommand(String line) {
-        // TODO 6: separați deviceId de restul liniei
-        //   ("device-1 SET_INTERVAL 1000" -> "device-1" și "SET_INTERVAL 1000")
-        //   și publicați comanda pe Config.commandTopic(deviceId).
-        //   Afișați un mesaj de eroare dacă linia nu are formatul corect.
-        System.out.println("(trimiterea comenzilor neimplementată): " + line);
+        // "device-1 SET_INTERVAL 1000" -> deviceId = "device-1", command = "SET_INTERVAL 1000"
+        String[] parts = line.split("\\s+", 2);
+        if (parts.length < 2 || parts[1].isBlank()) {
+            System.out.println("Format gresit. Scrie: <deviceId> <COMANDA> [parametru], de exemplu: device-1 SET_INTERVAL 1000");
+            return;
+        }
+
+        String deviceId = parts[0];
+        String command = parts[1].trim();
+
+        // caracterele / + # nu au voie într-un id de device: ar strica topic-ul MQTT
+        if (deviceId.contains("/") || deviceId.contains("+") || deviceId.contains("#")) {
+            System.out.println("DeviceId invalid: " + deviceId);
+            return;
+        }
+
+        mqtt.publish(Config.commandTopic(deviceId), command);
+        System.out.println("Comanda trimisa catre " + deviceId + ": " + command);
     }
 
     private void printHelp() {
